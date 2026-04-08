@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="VoteLive - Secure, scalable, and transparent online election management platform">
+    <meta name="keywords" content="election, voting, democracy, secure voting">
+    <meta name="theme-color" content="#0f766e">
+    <title>VoteLive - Digital Election Management</title>
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Bootstrap for responsive layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="app-styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✅</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo-brand">
+                <div class="logo-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 class="brand-name">VoteLive</h1>
+                    <p class="brand-tagline">Secure Democracy</p>
+                </div>
+            </div>
+            <!-- Mobile Hamburger -->
+            <button class="hamburger" id="hamburger">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <!-- Nav Menu -->
+            <div class="nav-menu" id="nav-menu">
+                <a href="#hero" class="nav-link" data-scroll>Home</a>
+                <a href="#how-works" class="nav-link" data-scroll>How It Works</a>
+                <a href="#about" class="nav-link" data-scroll>About</a>
+                <a href="#team" class="nav-link" data-scroll>Team</a>
+                <a href="#faq" class="nav-link" data-scroll>FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text-wrapper">
+                <h1 class="hero-title">
+                    <span class="typing-text" id="typing-text">Reinventing the Future of Elections</span>
+                </h1>
+                <p class="hero-subtitle">A smart, scalable, and secure platform for managing modern democratic processes</p>
+                <div class="hero-ctas">
+                    <button class="cta-button cta-primary" id="hero-vote-btn">
+                        <i class="fas fa-check"></i> Vote Now
+                    </button>
+                    <button class="cta-button cta-secondary" id="hero-admin-btn">
+                        <i class="fas fa-shield"></i> Admin Login
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="ballot-3d-container">
+                    <div class="ballot-3d">
+                        <div class="ballot-front">
+                            <div class="ballot-header">BALLOT 2026</div>
+                            <div class="ballot-option">
+                                <input type="checkbox" id="option1" checked>
+                                <label for="option1">Candidate A</label>
+                            </div>
+                            <div class="ballot-option">
+                                <input type="checkbox" id="option2">
+                                <label for="option2">Candidate B</label>
+                            </div>
+                            <div class="ballot-option">
+                                <input type="checkbox" id="option3">
+                                <label for="option3">Candidate C</label>
+                            </div>
+                            <div class="ballot-footer">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="ballot-back"></div>
+                        <div class="ballot-right"></div>
+                        <div class="ballot-left"></div>
+                        <div class="ballot-top"></div>
+                        <div class="ballot-bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-dot"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="section-title">About VoteLive</h2>
+                    <p class="section-subtitle">VoteLive empowers organizations to run transparent, auditable, and beautiful elections. Built for accessibility and speed, VoteLive offers modern analytics, multi-election support, and simple admin tools.</p>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Multi-election support with unique titles</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> Real-time results and top-candidate visualizations</li>
+                        <li><i class="fas fa-check-circle text-success me-2"></i> One vote per device enforcement</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Design-Led Experience</h5>
+                            <p class="card-text">A pixel-perfect interface with motion and clarity that makes voting simple for everyone.</p>
+                            <div class="d-flex gap-2">
+                                <span class="badge bg-primary">Secure</span>
+                                <span class="badge bg-info">Real-time</span>
+                                <span class="badge bg-warning text-dark">Auditable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose VoteLive</h2>
+            <p class="section-subtitle">Industry-leading election management with unmatched security and transparency</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Secure & Encrypted</h3>
+                    <p>Military-grade security ensures your vote is protected and tamper-proof</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> End-to-end encryption</li>
+                        <li><i class="fas fa-check"></i> Anonymous voting</li>
+                        <li><i class="fas fa-check"></i> Zero-knowledge proofs</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>Fast & Reliable</h3>
+                    <p>Instant vote processing with 99.9% uptime guarantee</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Real-time processing</li>
+                        <li><i class="fas fa-check"></i> 99.9% uptime SLA</li>
+                        <li><i class="fas fa-check"></i> Global CDN support</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>Real-time Analytics</h3>
+                    <p>Live vote tracking and detailed election statistics</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Live dashboards</li>
+                        <li><i class="fas fa-check"></i> Custom reports</li>
+                        <li><i class="fas fa-check"></i> Data export (JSON/CSV)</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Global Support</h3>
+                    <p>Accessible worldwide, supporting multiple languages</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> 150+ countries</li>
+                        <li><i class="fas fa-check"></i> Multi-language</li>
+                        <li><i class="fas fa-check"></i> 24/7 support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-works" class="how-works-section">
+        <div class="container">
+            <h2 class="section-title text-light">How It Works</h2>
+            <div class="steps-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Register</h3>
+                    <p>Create your account securely with unique credentials</p>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>View Candidates</h3>
+                    <p>Browse all candidates with detailed information and profiles</p>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Cast Your Vote</h3>
+                    <p>Vote securely with optional anonymity and encryption</p>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Confirm & Submit</h3>
+                    <p>Review and submit your vote with a unique confirmation code</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Team Section -->
+    <section id="team" class="team-section">
+        <div class="container">
+            <h2 class="section-title">Our Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image-wrapper">
+                        <img src="assets/member1.png" alt="Team Member" class="team-image">
+                    </div>
+                    <h3>M. Umar Jamal</h3>
+                    <p class="team-role">Lead Developer</p>
+                    <p class="team-bio">Design the System Of Live Election Management</p>
+                    <div class="team-socials">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-image-wrapper">
+                        <img src="assets/member2.png" alt="Team Member" class="team-image">
+                    </div>
+                    <h3>Farhan Zulfiqar</h3>
+                    <p class="team-role">UI / UX Designer</p>
+                    <p class="team-bio">Expert in cybersecurity and data protection</p>
+                    <div class="team-socials">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-image-wrapper">
+                        <img src="assets/member3.png" alt="Team Member" class="team-image">
+                    </div>
+                    <h3>Haroon Sarfraz</h3>
+                    <p class="team-role">Security Specialist</p>
+                    <p class="team-bio">The developer with years of experience in secure systems</p>
+                    <div class="team-socials">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <div class="team-image-wrapper">
+                        <img src="assets/member4.png" alt="Team Member" class="team-image">
+                    </div>
+                    <h3>Taha Aslam</h3>
+                    <p class="team-role">Project Manager</p>
+                    <p class="team-bio">Passionate about democratic processes and innovation</p>
+                    <div class="team-socials">
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <div class="faq-header">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <p class="section-subtitle">Everything you need to know about VoteLive</p>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-shield-alt"></i></div>
+                            <span>Is my vote secure and anonymous?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, VoteLive uses military-grade AES-256 encryption and blockchain technology to ensure your vote is secure, encrypted, and completely anonymous. Your identity is never linked to your vote through cryptographic zero-knowledge proofs, preventing any correlation between you and your vote.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-edit"></i></div>
+                            <span>Can I change my vote after submission?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No, once your vote is submitted and confirmed through our verification process, it cannot be changed. This immutable design prevents vote manipulation and ensures election integrity. However, you have a grace period before final submission to review your choices.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-key"></i></div>
+                            <span>What happens if I forget my credentials?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>You can use the password recovery option on the login page. We'll send a secure reset link to your registered email address. Follow the verification steps with your registered credentials and you'll receive instructions to reset your password securely.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-mobile-alt"></i></div>
+                            <span>Is VoteLive available on mobile devices?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely! VoteLive is fully responsive and optimized for all devices including smartphones, tablets, and desktops. Our progressive web app ensures a seamless voting experience from any device with a secure internet connection.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-clock"></i></div>
+                            <span>When can I vote and is there a deadline?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Voting windows are set by your election administrator. You'll receive notifications about voting start and end dates. Make sure to vote before the deadline as no votes can be submitted after the election closes. Check your dashboard for the exact voting period.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <div class="faq-question-content">
+                            <div class="faq-icon"><i class="fas fa-chart-pie"></i></div>
+                            <span>How are results calculated and when will I see them?</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Results are calculated in real-time as votes are cast and tallied by our secure counting algorithm. Once the voting period closes, final results are immediately published on the results dashboard with detailed analytics. All vote counts are verified through our blockchain ledger for complete transparency.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+<!-- Feedback section removed -->
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>VoteLive</h4>
+                    <p>Secure, scalable, and transparent election management platform.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#how-works">How It Works</a></li>
+                        <li><a href="#team">Team</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Security Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 VoteLive. All rights reserved. Secure Democracy for a Better Future.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmation-modal">
+        <div class="modal-content confirmation-modal-content">
+            <div class="modal-header">
+                <h2 id="confirmation-title">Confirm Action</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirmation-message">Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="cta-button cta-secondary modal-cancel-btn">Cancel</button>
+                <button class="cta-button cta-primary modal-confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Vendor Scripts: Chart.js for live charts, jsPDF for exports, Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Main app script -->
+    <script src="app-script.js"></script>
+
+    <!-- Socket.io client + realtime helper -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/realtime-client.js"></script>
+    
+    <script>
+        // Button handlers for navigation
+        document.getElementById('hero-vote-btn').addEventListener('click', function() {
+            window.location.href = 'v-panel.html';
+        });
+
+        document.getElementById('hero-admin-btn').addEventListener('click', function() {
+            window.location.href = 'a-panel.html';
+        });
+    </script>
+</body>
+</html>

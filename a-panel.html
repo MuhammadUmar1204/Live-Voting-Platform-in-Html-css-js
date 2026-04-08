@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - VoteLive (Enhanced)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #030303;
+            --bg-panel: #0f0f0f;
+            --accent: #7CFC00;
+            --accent-light: #a8ff00;
+            --danger: #ff3b30;
+            --success: #10b981;
+            --text-muted: #8bff8b;
+            --border-color: rgba(124, 252, 0, 0.1);
+            --glass-bg: rgba(124, 252, 0, 0.04);
+        }
+
+        html, body {
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #061006 100%);
+            color: var(--accent);
+            font-family: 'Courier New', 'Segoe UI', monospace;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .auth-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #000, #061006);
+            display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .auth-box { background: linear-gradient(180deg, #020202, #061006); border: 2px solid rgba(124,252,0,0.2);
+            padding: 40px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.8); max-width: 400px; width: 90%; }
+        .auth-title { font-size: 24px; font-weight: 900; color: var(--accent); margin-bottom: 24px; text-align: center; }
+        .auth-field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+        .auth-field label { font-size: 12px; color: var(--text-muted); font-weight: 700; }
+        .auth-field input { background: transparent; border: 1px solid rgba(124,252,0,0.1); color: var(--accent);
+            padding: 10px; border-radius: 6px; font-family: inherit; font-size: 13px; }
+        .auth-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 8px rgba(124,252,0,0.2); }
+        .auth-btn { background: linear-gradient(90deg, var(--accent), var(--accent-light)); color: #000; border: none;
+            padding: 12px; border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13px; margin-top: 12px; width: 100%; }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124,252,0,0.3); }
+        .auth-error { color: var(--danger); font-size: 12px; margin-top: 12px; text-align: center; }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            gap: 0;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #020202 0%, #061006 100%);
+            border-right: 2px solid var(--border-color);
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 8px 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+            color: #000;
+            box-shadow: 0 0 20px rgba(124, 252, 0, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 16px;
+            color: var(--accent);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .tab-btn:hover {
+            background: rgba(124, 252, 0, 0.05);
+            border-color: rgba(124, 252, 0, 0.1);
+            color: var(--accent);
+        }
+
+        .tab-btn.active {
+            background: rgba(124, 252, 0, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 10px rgba(124, 252, 0, 0.2);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .header-title h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        .header-title p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .header-status {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: right;
+        }
+
+        .status-item label {
+            font-size: 11px;
+            color: var(--text-muted);
+            opacity: 0.8;
+        }
+
+        .status-item span {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .panel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, #07110a 0%, #0b120a 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--accent);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 8px rgba(124, 252, 0, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(124, 252, 0, 0.4);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: 1px solid var(--accent);
+            background: transparent;
+            color: var(--accent);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: rgba(124, 252, 0, 0.1);
+            box-shadow: 0 0 12px rgba(124, 252, 0, 0.3);
+        }
+
+        .btn-danger {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 59, 48, 0.1);
+            box-shadow: 0 0 12px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: rgba(16, 185, 129, 0.1);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .live-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: rgba(124, 252, 0, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.on {
+            background: rgba(124, 252, 0, 0.2);
+            border-color: var(--accent);
+        }
+
+        .toggle-knob {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.on .toggle-knob {
+            left: 24px;
+        }
+
+        .toggle-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .live-results {
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(124, 252, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+        }
+
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .chart-bar-label {
+            min-width: 100px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .chart-bar-fill {
+            flex: 1;
+            height: 12px;
+            background: rgba(124, 252, 0, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .chart-bar-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 6px;
+            min-width: 2px;
+            box-shadow: 0 0 8px rgba(124, 252, 0, 0.4);
+        }
+
+        .chart-bar-value {
+            min-width: 40px;
+            text-align: right;
+            color: var(--text-muted);
+        }
+
+        .field-checkboxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .list-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0;
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12px;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .list-item-name {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .list-item-detail {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        table th {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        table tr:hover {
+            background: rgba(124, 252, 0, 0.03);
+        }
+
+        .table-wrapper { overflow-x: auto; }
+        .table-wrapper table { min-width: 1100px; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: rgba(124, 252, 0, 0.1);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 10px;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .badge-danger {
+            background: rgba(255, 59, 48, 0.1);
+            border-color: rgba(255, 59, 48, 0.3);
+            color: var(--danger);
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--success);
+        }
+
+        .time-info {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px;
+            background: rgba(124, 252, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+
+        .candidate-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(124, 252, 0, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .candidate-emoji {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(124, 252, 0, 0.1);
+            border-radius: 6px;
+        }
+
+        .candidate-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .candidate-name {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .candidate-party {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .fraud-item {
+            padding: 12px;
+            background: rgba(255, 59, 48, 0.05);
+            border: 1px solid rgba(255, 59, 48, 0.2);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .fraud-item-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .fraud-item-name {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .fraud-item-reason {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .input-file-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .input-file-wrapper input[type="file"] {
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .field-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-height: 120px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                padding: 12px 20px;
+            }
+
+            .brand {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+                white-space: nowrap;
+            }
+
+            .nav-tabs {
+                flex-direction: row;
+                gap: 4px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .tab-btn {
+                padding: 8px 10px;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+
+            .main-content {
+                padding: 12px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header-status {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .status-item {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Modal -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-box">
+            <div class="auth-title">🔐 Admin Login</div>
+            <div class="auth-field">
+                <label>Username</label>
+                <input type="text" id="authUsername" placeholder="Enter username" />
+            </div>
+            <div class="auth-field">
+                <label>Password</label>
+                <input type="password" id="authPassword" placeholder="Enter password" />
+            </div>
+            <button class="auth-btn" id="authLoginBtn">Login</button>
+            <div class="auth-error" id="authError"></div>
+        </div>
+    </div>
+
+    <!-- Main App (hidden until auth) -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">✔</div>
+                <div class="brand-text">
+                    <h1>VoteLive</h1>
+                    <p>Admin Console</p>
+                </div>
+            </div>
+
+            <nav class="nav-tabs" id="tabNav">
+                <button class="tab-btn active" data-tab="manage-election">⚙️ Manage Election</button>
+                <button class="tab-btn" data-tab="voter-form">🧾 Voter Form</button>
+                <button class="tab-btn" data-tab="manage-candidates">🧑‍⚖️ Candidates</button>
+                <button class="tab-btn" data-tab="view-voters">👥 Voter Details</button>
+                <button class="tab-btn" data-tab="fraud-list">🚨 Fraud List</button>
+                <button class="tab-btn" data-tab="logout">🔚 Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-title">
+                    <h2 id="panelTitle">Manage Election</h2>
+                    <p id="electionStatusText">Status: Not Started</p>
+                </div>
+                <div class="header-status">
+                    <div class="status-item">
+                        <label>Election</label>
+                        <span id="currentElectionTitle">—</span>
+                    </div>
+                    <div class="status-item">
+                        <label>Ends At</label>
+                        <span id="endsAtTime">—</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="panel-container">
+                <!-- Manage Election Panel -->
+                <div class="panel active" id="manage-election">
+                    <div class="panel-title">⚙️ Election Controls</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="electionTitle">Election Title*</label>
+                            <input type="text" id="electionTitle" placeholder="Enter election name" autocorrect="off" autocomplete="off" />
+                        </div>
+                        <div class="form-group">
+                            <label for="electionDuration">Duration (minutes)*</label>
+                            <select id="electionDuration">
+                                <option value="15">15 minutes</option>
+                                <option value="30" selected>30 minutes</option>
+                                <option value="45">45 minutes</option>
+                                <option value="60">1 hour (60 minutes)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn" id="startBtn">▶️ Start Election</button>
+                        <button class="btn" id="pauseBtn">⏸️ Pause</button>
+                        <button class="btn" id="resumeBtn">▶️ Resume</button>
+                        <button class="btn" id="closeBtn">⏹️ Close Election</button>
+                        <button class="btn btn-success" id="announceBtn">🏆 Announce Winner</button>
+                        <button class="btn" id="saveSettingsBtn">💾 Save Settings</button>
+                        <button class="btn btn-danger" id="deleteElectionBtn">🗑️ Delete All</button>
+                    </div>
+
+                    <div class="live-toggle">
+                        <label for="liveToggle">Show Live Results to Voters:</label>
+                        <div class="toggle-switch" id="liveToggle" role="switch" aria-checked="false">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="toggle-label" id="liveStatus">OFF</span>
+                    </div>
+
+                    <div class="live-results">
+                        <div class="panel-title" style="margin-bottom: 12px;">📊 Live Results (Top 3)</div>
+                        <div id="liveResultsContainer"></div>
+                    </div>
+
+                    <div class="time-info">
+                        ⏱️ <span id="electionTimer">No election running</span>
+                    </div>
+                </div>
+
+                <!-- Voter Form Requirements Panel -->
+                <div class="panel" id="voter-form">
+                    <div class="panel-title">🧾 Voter Form Requirements</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                        ✓ Name is always required. Select optional fields below:
+                    </p>
+
+                    <div class="field-checkboxes">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-cnic" value="cnic" />
+                            <label for="field-cnic">CNIC Number</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-father" value="father_name" />
+                            <label for="field-father">Father's Name</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-picture" value="picture" />
+                            <label for="field-picture">Picture Upload</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-left-finger" value="left_finger" />
+                            <label for="field-left-finger">Left Finger Print</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-right-finger" value="right_finger" />
+                            <label for="field-right-finger">Right Finger Print</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-email" value="email" />
+                            <label for="field-email">Email Address</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="field-contact" value="contact_number" />
+                            <label for="field-contact">Contact Number</label>
+                        </div>
+                    </div>
+
+                    <div class="button-group" style="margin-top: 20px;">
+                        <button class="btn" id="saveFieldsBtn">💾 Save Form Fields</button>
+                    </div>
+                </div>
+
+                <!-- Manage Candidates Panel -->
+                <div class="panel" id="manage-candidates">
+                    <div class="panel-title">🧑‍⚖️ Manage Candidates</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="candName">Candidate Name*</label>
+                            <input type="text" id="candName" placeholder="Full name" />
+                        </div>
+                        <div class="form-group">
+                            <label for="candParty">Party Name*</label>
+                            <input type="text" id="candParty" placeholder="Political party" />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="candEmoji">Party Symbol (Emoji)*</label>
+                            <input type="text" id="candEmoji" placeholder="e.g., 🦅" maxlength="2" />
+                        </div>
+                        <div class="form-group">
+                            <label for="candPicture">Candidate Picture</label>
+                            <input type="file" id="candPicture" accept="image/*" />
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn" id="addCandidateBtn">➕ Add Candidate</button>
+                        <button class="btn btn-danger" id="clearCandidatesBtn">🗑️ Clear All</button>
+                    </div>
+
+                    <div class="list-container" id="candidatesList"></div>
+                </div>
+
+                <!-- View Voter Details Panel -->
+                <div class="panel" id="view-voters">
+                    <div class="panel-title">👥 Voter Details</div>
+
+                    <div class="table-wrapper">
+                        <table id="votersTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Device ID</th>
+                                    <th>CNIC</th>
+                                    <th>Picture</th>
+                                    <th>Left Finger</th>
+                                    <th>Right Finger</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Voted For</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Fraud List Panel -->
+                <div class="panel" id="fraud-list">
+                    <div class="panel-title">🚨 Fraud Detection</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                        Duplicate votes detected by device or CNIC:
+                    </p>
+
+                    <div id="fraudListContainer"></div>
+
+                    <div class="button-group" style="margin-top: 16px;">
+                        <button class="btn btn-danger" id="removeDuplicatesBtn">⚠️ Remove Duplicates (Per Device)</button>
+                    </div>
+                </div>
+
+                <!-- Logout Panel -->
+                <div class="panel" id="logout">
+                    <div class="panel-title">🔚 Logout</div>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                        End your admin session. All data will be preserved on return.
+                    </p>
+                    <div class="button-group">
+                        <button class="btn btn-danger" id="logoutBtn">🚪 Logout Now</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ===== LIVE VOTING SYSTEM - MULTI-DEVICE SYNC VIA LOCALSTORAGE =====
+        // Works offline and syncs across devices in real-time
+        // No backend required - 100% client-side
+        
+        // ===== CORE DEFINITIONS FIRST =====
+        const LS = window.localStorage;
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+        const makeId = () => Math.random().toString(36).slice(2, 11);
+
+        // ===== AUTHENTICATION =====
+        const AUTH_USERNAME = 'admin';
+        const AUTH_PASSWORD = 'password123';
+        const AUTH_KEY = 'vl_authenticated';
+
+        function checkAuth() {
+            return LS.getItem(AUTH_KEY) === 'true';
+        }
+
+        function setAuth(authenticated) {
+            if (authenticated) {
+                LS.setItem(AUTH_KEY, 'true');
+            } else {
+                LS.removeItem(AUTH_KEY);
+            }
+        }
+
+        $('#authLoginBtn').addEventListener('click', () => {
+            const username = $('#authUsername').value;
+            const password = $('#authPassword').value;
+            if (username === AUTH_USERNAME && password === AUTH_PASSWORD) {
+                setAuth(true);
+                $('#authContainer').style.display = 'none';
+                $('#appContainer').style.display = 'flex';
+                init();
+            } else {
+                $('#authError').textContent = '❌ Invalid credentials';
+            }
+        });
+
+        $('#authPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') $('#authLoginBtn').click();
+        });
+
+        // Check auth on load
+        if (!checkAuth()) {
+            // Auth screen will show by default
+        } else {
+            $('#authContainer').style.display = 'none';
+            $('#appContainer').style.display = 'flex';
+        }
+
+        // ===== CORE STATE MANAGEMENT =====
+
+        // Ensure device ID
+        const DEVICE_KEY = 'vl_deviceId';
+        if (!LS.getItem(DEVICE_KEY)) {
+            LS.setItem(DEVICE_KEY, 'admin_' + makeId());
+        }
+
+        // Helper functions
+        function read(key) {
+            try {
+                return JSON.parse(LS.getItem(key) || 'null');
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function write(key, val) {
+            LS.setItem(key, JSON.stringify(val));
+        }
+
+        function ensureState() {
+            if (!read('vl_election')) write('vl_election', { status: 'not_started', title: '', durationMin: 30 });
+            if (!read('vl_candidates')) write('vl_candidates', []);
+            if (!read('vl_config')) write('vl_config', { fields: [], liveResultsVisible: false });
+            if (!read('vl_voters')) write('vl_voters', []);
+            if (!read('vl_fraud')) write('vl_fraud', []);
+        }
+
+        ensureState();
+
+        // ===== TAB NAVIGATION =====
+        function initTabs() {
+            const tabBtns = $$('.tab-btn');
+            tabBtns.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabBtns.forEach((b) => b.classList.remove('active'));
+                    // Add active class to clicked tab
+                    btn.classList.add('active');
+                    // Show corresponding panel
+                    const tabName = btn.dataset.tab;
+                    showPanel(tabName);
+                });
+            });
+        }
+
+        function showPanel(panelName) {
+            // Hide all panels
+            const panels = $$('.panel');
+            panels.forEach((p) => p.classList.remove('active'));
+            // Show selected panel
+            const panel = $(`#${panelName}`);
+            if (panel) {
+                panel.classList.add('active');
+            }
+            // Update header title
+            const titles = {
+                'manage-election': 'Manage Election',
+                'voter-form': 'Voter Form Requirements',
+                'manage-candidates': 'Manage Candidates',
+                'view-voters': 'View Voter Details',
+                'fraud-list': 'Fraud Detection',
+                'logout': 'Logout'
+            };
+            $('#panelTitle').textContent = titles[panelName] || 'Admin Panel';
+
+            // Refresh specific panel data
+            if (panelName === 'manage-candidates') renderCandidatesList();
+            if (panelName === 'view-voters') renderVotersTable();
+            if (panelName === 'fraud-list') renderFraudList();
+        }
+
+        // ===== ELECTION MANAGEMENT =====
+        function getElection() {
+            return read('vl_election') || { status: 'not_started', title: '', durationMin: 30 };
+        }
+
+        function saveElection(updates) {
+            const current = getElection();
+            const updated = { ...current, ...updates };
+            write('vl_election', updated);
+            updateElectionUI();
+        }
+
+        function updateElectionUI() {
+            const el = getElection();
+            $('#currentElectionTitle').textContent = el.title || '—';
+            // Only update the input field if it's not currently being edited
+            if (document.activeElement !== $('#electionTitle')) {
+                $('#electionTitle').value = el.title;
+            }
+            $('#electionDuration').value = el.durationMin;
+            $('#electionStatusText').textContent = 'Status: ' + (el.status || 'Not Started').toUpperCase();
+
+            if (el.endsAt) {
+                $('#endsAtTime').textContent = new Date(el.endsAt).toLocaleString();
+            } else {
+                $('#endsAtTime').textContent = '—';
+            }
+
+            renderLiveResults();
+        }
+
+        // Ensure backslash works in election title field
+        $('#electionTitle').addEventListener('keydown', (e) => {
+            // Allow backslash (Backslash key code 220 or \)
+            if (e.key === '\\' || e.key === '|') {
+                // Don't prevent default - allow normal input
+            }
+        });
+
+        // Timer loop
+        let timerInterval = null;
+
+        function startTimerLoop() {
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                const el = getElection();
+                const timerEl = $('#electionTimer');
+
+                if (el.status === 'running' && el.endsAt) {
+                    const remaining = new Date(el.endsAt).getTime() - Date.now();
+                    if (remaining <= 0) {
+                        saveElection({ status: 'closed' });
+                        timerEl.textContent = 'Election Closed';
+                        clearInterval(timerInterval);
+                    } else {
+                        const mins = Math.floor(remaining / 60000);
+                        const secs = Math.floor((remaining % 60000) / 1000);
+                        timerEl.textContent = `Running: ${mins}m ${secs}s remaining`;
+                    }
+                } else if (el.status === 'paused') {
+                    timerEl.textContent = 'Election Paused';
+                } else if (el.status === 'closed') {
+                    timerEl.textContent = 'Election Closed';
+                } else {
+                    timerEl.textContent = 'No election running';
+                }
+            }, 1000);
+        }
+
+        // ===== ELECTION CONTROL BUTTONS =====
+        $('#startBtn').addEventListener('click', () => {
+            const title = $('#electionTitle').value.trim();
+            if (!title) {
+                alert('⚠️ Please enter an election title');
+                return;
+            }
+            const durationMin = Number($('#electionDuration').value);
+            const startedAt = Date.now();
+            const endsAt = startedAt + durationMin * 60 * 1000;
+            saveElection({
+                status: 'running',
+                title,
+                durationMin,
+                startedAt,
+                endsAt,
+                paused: false
+            });
+            startTimerLoop();
+            alert('✓ Election started!');
+        });
+
+        $('#pauseBtn').addEventListener('click', () => {
+            const el = getElection();
+            if (el.status !== 'running') {
+                alert('⚠️ Election is not running');
+                return;
+            }
+            const remaining = el.endsAt - Date.now();
+            saveElection({
+                status: 'paused',
+                paused: true,
+                remainingMs: remaining
+            });
+            clearInterval(timerInterval);
+            alert('⏸️ Election paused');
+        });
+
+        $('#resumeBtn').addEventListener('click', () => {
+            const el = getElection();
+            if (el.status !== 'paused') {
+                alert('⚠️ Election is not paused');
+                return;
+            }
+            const newEndsAt = Date.now() + el.remainingMs;
+            saveElection({
+                status: 'running',
+                endsAt: newEndsAt,
+                paused: false
+            });
+            startTimerLoop();
+            alert('▶️ Election resumed');
+        });
+
+        $('#closeBtn').addEventListener('click', () => {
+            const el = getElection();
+            if (el.status === 'closed') {
+                alert('⚠️ Election already closed');
+                return;
+            }
+            saveElection({ status: 'closed' });
+            clearInterval(timerInterval);
+            alert('✓ Election closed');
+        });
+
+        $('#announceBtn').addEventListener('click', () => {
+            const candidates = read('vl_candidates') || [];
+            const voters = read('vl_voters') || [];
+            if (candidates.length === 0) {
+                alert('⚠️ No candidates available');
+                return;
+            }
+            if (voters.length === 0) {
+                alert('⚠️ No votes received');
+                return;
+            }
+            // Count votes
+            const tally = {};
+            candidates.forEach((c) => (tally[c.id] = 0));
+            voters.forEach((v) => {
+                if (v.votedCandidateId) tally[v.votedCandidateId]++;
+            });
+            const sorted = Object.keys(tally).sort((a, b) => tally[b] - tally[a]);
+            const winnerId = sorted[0];
+            const winner = candidates.find((c) => c.id === winnerId);
+            if (winner) {
+                saveElection({ 
+                    announced: true, 
+                    winner: { 
+                        id: winner.id, 
+                        name: winner.name, 
+                        party: winner.party, 
+                        emoji: winner.emoji, 
+                        picture: winner.picture 
+                    } 
+                });
+                alert(`🏆 Winner Announced: ${winner.name}`);
+            } else {
+                alert('⚠️ No clear winner');
+            }
+        });
+
+        $('#saveSettingsBtn').addEventListener('click', () => {
+            const title = $('#electionTitle').value.trim();
+            if (!title) {
+                alert('⚠️ Please enter election title');
+                return;
+            }
+            const durationMin = Number($('#electionDuration').value);
+            saveElection({ title, durationMin });
+            alert('✓ Settings saved');
+        });
+
+        $('#deleteElectionBtn').addEventListener('click', () => {
+            if (!confirm('🚨 Delete ALL election data? This cannot be undone!')) return;
+            LS.removeItem('vl_election');
+            LS.removeItem('vl_candidates');
+            LS.removeItem('vl_voters');
+            LS.removeItem('vl_fraud');
+            LS.removeItem('vl_config');
+            ensureState();
+            updateElectionUI();
+            renderCandidatesList();
+            renderVotersTable();
+            renderFraudList();
+            clearInterval(timerInterval);
+            alert('✓ All data deleted');
+        });
+
+        // Live results toggle
+        $('#liveToggle').addEventListener('click', () => {
+            const cfg = read('vl_config') || { fields: [], liveResultsVisible: false };
+            cfg.liveResultsVisible = !cfg.liveResultsVisible;
+            write('vl_config', cfg);
+            $('#liveStatus').textContent = cfg.liveResultsVisible ? 'ON' : 'OFF';
+            if (cfg.liveResultsVisible) {
+                $('#liveToggle').classList.add('on');
+            } else {
+                $('#liveToggle').classList.remove('on');
+            }
+            alert(cfg.liveResultsVisible ? '✓ Live results enabled for voters' : '✓ Live results hidden from voters');
+        });
+
+        // ===== VOTER FORM REQUIREMENTS =====
+        function loadFormFields() {
+            const cfg = read('vl_config') || { fields: [] };
+            const fieldIds = ['field-cnic', 'field-father', 'field-picture', 'field-left-finger', 'field-right-finger', 'field-email', 'field-contact'];
+            fieldIds.forEach((id) => {
+                const checkbox = $(`#${id}`);
+                if (checkbox) {
+                    checkbox.checked = cfg.fields.includes(checkbox.value);
+                }
+            });
+        }
+
+        $('#saveFieldsBtn').addEventListener('click', () => {
+            const cfg = read('vl_config') || { fields: [], liveResultsVisible: false };
+            const selected = [];
+            $$('#voter-form input[type="checkbox"]:checked').forEach((cb) => {
+                selected.push(cb.value);
+            });
+            cfg.fields = selected;
+            write('vl_config', cfg);
+            alert('✓ Voter form fields saved');
+        });
+
+        loadFormFields();
+
+        // ===== CANDIDATES MANAGEMENT =====
+        $('#addCandidateBtn').addEventListener('click', () => {
+            const name = $('#candName').value.trim();
+            const party = $('#candParty').value.trim();
+            const emoji = $('#candEmoji').value.trim() || '🔷';
+
+            if (!name || !party) {
+                alert('⚠️ Name and Party are required');
+                return;
+            }
+
+            const candidates = read('vl_candidates') || [];
+            const newCandidate = {
+                id: makeId(),
+                name,
+                party,
+                emoji,
+                picture: '',
+                votes: 0
+            };
+
+            const fileInput = $('#candPicture');
+            if (fileInput.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    newCandidate.picture = e.target.result;
+                    candidates.push(newCandidate);
+                    write('vl_candidates', candidates);
+                    $('#candName').value = '';
+                    $('#candParty').value = '';
+                    $('#candEmoji').value = '';
+                    $('#candPicture').value = '';
+                    renderCandidatesList();
+                    alert('✓ Candidate added');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                candidates.push(newCandidate);
+                write('vl_candidates', candidates);
+                $('#candName').value = '';
+                $('#candParty').value = '';
+                $('#candEmoji').value = '';
+                $('#candPicture').value = '';
+                renderCandidatesList();
+                alert('✓ Candidate added');
+            }
+        });
+
+        $('#clearCandidatesBtn').addEventListener('click', () => {
+            if (!confirm('🗑️ Delete ALL candidates?')) return;
+            write('vl_candidates', []);
+            renderCandidatesList();
+            alert('✓ All candidates cleared');
+        });
+
+        function renderCandidatesList() {
+            const candidates = read('vl_candidates') || [];
+            const container = $('#candidatesList');
+            container.innerHTML = '';
+
+            if (candidates.length === 0) {
+                container.innerHTML = '<div class="list-item" style="color: var(--text-muted);">No candidates yet</div>';
+                return;
+            }
+
+            candidates.forEach((c) => {
+                const div = document.createElement('div');
+                div.className = 'list-item';
+                div.innerHTML = `
+                    <div class="list-item-content">
+                        <div class="list-item-name">${c.emoji} ${escapeHtml(c.name)}</div>
+                        <div class="list-item-detail">Party: ${escapeHtml(c.party)}</div>
+                    </div>
+                    <div class="list-item-actions">
+                        <button class="btn" onclick="removeCandidate('${c.id}')">Remove</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeCandidate(id) {
+            const candidates = read('vl_candidates') || [];
+            const filtered = candidates.filter((c) => c.id !== id);
+            write('vl_candidates', filtered);
+            renderCandidatesList();
+        }
+
+        // ===== VOTERS TABLE =====
+        function renderVotersTable() {
+            const tbody = $('#votersTable tbody');
+            tbody.innerHTML = '';
+            const voters = read('vl_voters') || [];
+
+            if (voters.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center;">No voter records yet</td></tr>';
+                return;
+            }
+
+            voters.forEach((v, index) => {
+                const candidates = read('vl_candidates') || [];
+                const candidate = candidates.find((c) => c.id === v.votedCandidateId);
+                const tr = document.createElement('tr');
+                
+                // Store image data in global object for safe download
+                if (v.picture) window[`img_${index}_pic`] = v.picture;
+                if (v.left_finger) window[`img_${index}_left`] = v.left_finger;
+                if (v.right_finger) window[`img_${index}_right`] = v.right_finger;
+                
+                tr.innerHTML = `
+                    <td>${escapeHtml(v.name || '—')}</td>
+                    <td style="font-size: 10px;">${escapeHtml(v.deviceId || '—')}</td>
+                    <td>${escapeHtml(v.cnic || '—')}</td>
+                    <td>${v.picture ? `<button class="btn" onclick="downloadImage(window.img_${index}_pic, 'voter-picture')">📥 Download</button>` : '—'}</td>
+                    <td>${v.left_finger ? `<button class="btn" onclick="downloadImage(window.img_${index}_left, 'left-finger')">📥 Download</button>` : '—'}</td>
+                    <td>${v.right_finger ? `<button class="btn" onclick="downloadImage(window.img_${index}_right, 'right-finger')">📥 Download</button>` : '—'}</td>
+                    <td>${escapeHtml(v.email || '—')}</td>
+                    <td>${escapeHtml(v.contact_number || '—')}</td>
+                    <td>${candidate ? `${candidate.emoji} ${escapeHtml(candidate.name)}` : 'Not voted'}</td>
+                    <td>${new Date(v.timestamp || 0).toLocaleString()}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function downloadImage(dataUrl, type = 'image') {
+            try {
+                if (!dataUrl) {
+                    alert('⚠️ No image available to download');
+                    return;
+                }
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = `${type}-${Date.now()}.png`;
+                link.style.display = 'none';
+                document.body.appendChild(link);
+                
+                // Trigger download
+                setTimeout(() => {
+                    link.click();
+                    setTimeout(() => document.body.removeChild(link), 100);
+                }, 50);
+                
+                alert('✅ Image downloading...');
+            } catch (e) {
+                console.error('Download error:', e);
+                alert('⚠️ Error downloading image. Try right-clicking and "Save Image As"');
+            }
+        }
+
+        // ===== FRAUD DETECTION =====
+        function detectFraud() {
+            const voters = read('vl_voters') || [];
+            const cfg = read('vl_config') || { fields: [] };
+            const fraud = [];
+
+            // Check by device ID
+            const byDevice = {};
+            voters.forEach((v) => {
+                const dev = v.deviceId;
+                if (!byDevice[dev]) byDevice[dev] = [];
+                byDevice[dev].push(v);
+            });
+
+            Object.keys(byDevice).forEach((dev) => {
+                if (byDevice[dev].length > 1) {
+                    byDevice[dev].slice(1).forEach((dup) => {
+                        fraud.push({ voter: dup, reason: 'Duplicate Device' });
+                    });
+                }
+            });
+
+            // Check by CNIC if required
+            if (cfg.fields.includes('cnic')) {
+                const byCnic = {};
+                voters.forEach((v) => {
+                    if (v.cnic) {
+                        if (!byCnic[v.cnic]) byCnic[v.cnic] = [];
+                        byCnic[v.cnic].push(v);
+                    }
+                });
+
+                Object.keys(byCnic).forEach((cnic) => {
+                    if (byCnic[cnic].length > 1) {
+                        byCnic[cnic].slice(1).forEach((dup) => {
+                            fraud.push({ voter: dup, reason: 'Duplicate CNIC' });
+                        });
+                    }
+                });
+            }
+
+            return fraud;
+        }
+
+        function renderFraudList() {
+            const container = $('#fraudListContainer');
+            container.innerHTML = '';
+            const frauds = detectFraud();
+
+            if (frauds.length === 0) {
+                container.innerHTML = '<div class="fraud-item" style="background: rgba(16, 185, 129, 0.05); border-color: rgba(16, 185, 129, 0.2);"><span style="color: var(--success);">✓ No fraud detected</span></div>';
+                return;
+            }
+
+            frauds.forEach((f, i) => {
+                const div = document.createElement('div');
+                div.className = 'fraud-item';
+                div.innerHTML = `
+                    <div class="fraud-item-header">
+                        <div class="fraud-item-name">${escapeHtml(f.voter.name || '—')}</div>
+                        <button class="btn btn-danger" onclick="removeFraud(${i})">Remove</button>
+                    </div>
+                    <div class="fraud-item-reason">
+                        Reason: ${f.reason} | Device: ${f.voter.deviceId} | Time: ${new Date(f.voter.timestamp).toLocaleString()}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function removeFraud(index) {
+            const frauds = detectFraud();
+            if (index < 0 || index >= frauds.length) return;
+            const f = frauds[index];
+            // Remove this voter record
+            let voters = read('vl_voters') || [];
+            voters = voters.filter((v) => !(v.deviceId === f.voter.deviceId && v.timestamp === f.voter.timestamp));
+            write('vl_voters', voters);
+            renderVotersTable();
+            renderFraudList();
+        }
+
+        $('#removeDuplicatesBtn').addEventListener('click', () => {
+            if (!confirm('⚠️ Remove all duplicate votes per device (keep first vote)?')) return;
+            let voters = read('vl_voters') || [];
+            const seen = new Set();
+            voters = voters.filter((v) => {
+                if (seen.has(v.deviceId)) return false;
+                seen.add(v.deviceId);
+                return true;
+            });
+            write('vl_voters', voters);
+            renderVotersTable();
+            renderFraudList();
+            alert('✓ Duplicates removed');
+        });
+
+        // ===== LIVE RESULTS =====
+        function renderLiveResults() {
+            const container = $('#liveResultsContainer');
+            container.innerHTML = '';
+            const candidates = (read('vl_candidates') || []).slice(0, 3);
+            const voters = read('vl_voters') || [];
+
+            if (candidates.length === 0) {
+                container.innerHTML = '<div style="color: var(--text-muted); font-size: 12px;">Add candidates to see results</div>';
+                return;
+            }
+
+            const tally = {};
+            (read('vl_candidates') || []).forEach((c) => (tally[c.id] = 0));
+            voters.forEach((v) => {
+                if (v.votedCandidateId) tally[v.votedCandidateId]++;
+            });
+
+            const total = voters.filter((v) => v.votedCandidateId).length || 1;
+
+            candidates.forEach((c) => {
+                const count = tally[c.id] || 0;
+                const percent = Math.round((count / total) * 100);
+                const div = document.createElement('div');
+                div.className = 'chart-bar';
+                div.innerHTML = `
+                    <div class="chart-bar-label">${c.emoji} ${escapeHtml(c.name)}</div>
+                    <div class="chart-bar-fill">
+                        <div class="chart-bar-progress" style="width: ${Math.max(2, percent)}%"></div>
+                    </div>
+                    <div class="chart-bar-value">${count} votes (${percent}%)</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ===== LOGOUT =====
+        $('#logoutBtn').addEventListener('click', () => {
+            if (confirm('🚪 End admin session?')) {
+                alert('✓ Session ended. You can refresh to log back in.');
+                // In a real app, this would redirect to login page
+            }
+        });
+
+        // ===== HELPER FUNCTIONS =====
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // ===== INITIALIZATION =====
+        function init() {
+            initTabs();
+            updateElectionUI();
+            renderCandidatesList();
+            renderVotersTable();
+            renderFraudList();
+            startTimerLoop();
+
+            // Refresh UI every 1-2 seconds for multi-device sync
+            setInterval(() => {
+                updateElectionUI();
+                renderVotersTable();
+                renderFraudList();
+                renderLiveResults();
+            }, 1000);
+        }
+
+        // Only initialize if already authenticated
+        if (checkAuth()) {
+            document.addEventListener('DOMContentLoaded', () => {
+                $('#authContainer').style.display = 'none';
+                $('#appContainer').style.display = 'flex';
+                init();
+            });
+        }
+
+        // Expose helpers for voter panel integration
+        window.vl_admin = {
+            addVoter: function (voterObj) {
+                const voters = read('vl_voters') || [];
+                voters.push(voterObj);
+                write('vl_voters', voters);
+                renderVotersTable();
+                renderFraudList();
+                renderLiveResults();
+            },
+            getState: function () {
+                return {
+                    election: getElection(),
+                    candidates: read('vl_candidates'),
+                    config: read('vl_config'),
+                    voters: read('vl_voters')
+                };
+            }
+        };
+    </script>
+
+    <!-- Socket.io client + realtime helper -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/realtime-client.js"></script>
+    <!-- Admin Real-time Integration (socket based) -->
+    <script src="admin-realtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voter Panel - VoteLive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0f766e;
+            --primary-light: #14b8a6;
+            --secondary-color: #6D28D9;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f97316;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-card: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .header-status {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .status-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-value {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--secondary-color);
+        }
+
+        .countdown {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.08);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .join-section {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.03) 0%, rgba(107, 114, 128, 0.03) 100%);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .join-section p {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(15, 118, 110, 0.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(15, 118, 110, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .candidate-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .candidate-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 20px rgba(15, 118, 110, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .candidate-card.selected {
+            border-color: var(--secondary-color);
+            background: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            box-shadow: 0 6px 20px rgba(109, 40, 217, 0.15);
+        }
+
+        .candidate-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(15,118,110,0.1), rgba(6,182,212,0.1));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .candidate-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .candidate-image-emoji {
+            font-size: 60px;
+        }
+
+        .candidate-emoji {
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .candidate-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .candidate-party {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .candidate-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .vote-bar {
+            background: var(--bg-light);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .vote-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .vote-count {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .results-section {
+            margin-top: 20px;
+        }
+
+        .results-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .results-label {
+            min-width: 150px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .results-bar-fill {
+            flex: 1;
+            height: 10px;
+            background: var(--bg-light);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .results-bar-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            min-width: 2px;
+        }
+
+        .results-value {
+            min-width: 80px;
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.03) 0%, rgba(20, 184, 166, 0.03) 100%);
+            border: 1px solid rgba(15, 118, 110, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .info-box p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .timer-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(109, 40, 217, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border-radius: 10px;
+            margin-top: 16px;
+        }
+
+        .timer-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--secondary-color);
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: var(--bg-card);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .modal-body {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--success);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .alert-warning {
+            background: rgba(249, 115, 22, 0.1);
+            border: 1px solid rgba(249, 115, 22, 0.3);
+            color: var(--warning);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .header-status {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .candidates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .header-title h1 {
+                font-size: 22px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-content">
+                <div class="header-title">
+                    <div class="logo">🗳️</div>
+                    <div>
+                        <h1>VoteLive</h1>
+                        <p>Secure Online Voting System</p>
+                    </div>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-badge">
+                    <span class="status-label">Election Status</span>
+                    <span class="status-value" id="electionStatus">Not Started</span>
+                </div>
+                <div class="status-badge">
+                    <span class="status-label">Time Remaining</span>
+                    <div class="countdown" id="countdownTimer">—:—</div>
+                </div>
+                <button class="btn btn-success" id="seeWinnerBtn" style="display: none; padding: 8px 16px; font-size: 12px;">👑 See Winner</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Election Info Card -->
+            <div class="card">
+                <div class="card-title">📋 Election Information</div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Election Title:</p>
+                        <p style="font-size: 16px; font-weight: 800; color: var(--primary-color); margin: 0;">
+                            <span id="electionTitle">—</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin: 0;">Election Period:</p>
+                        <p style="font-size: 14px; color: var(--text-primary); margin: 0;">
+                            <span id="electionPeriod">—</span>
+                        </p>
+                    </div>
+                    <div id="liveResultsStatus" style="display: none;">
+                        <p style="font-size: 13px; color: var(--success); margin: 0;">✓ Live results are visible</p>
+                    </div>
+                </div>
+
+                <!-- Join Section -->
+                <div class="join-section" id="joinSection" style="display: none;">
+                    <p>Join the election to cast your vote</p>
+                    <button class="btn btn-primary" id="joinBtn">🎯 Join Election</button>
+                </div>
+            </div>
+
+            <!-- Voter Form Card -->
+            <div class="card" id="voterFormCard" style="display: none;">
+                <div class="card-title">✍️ Voter Information</div>
+
+                <form id="voterForm" style="display: flex; flex-direction: column; gap: 16px;">
+                    <div class="form-group">
+                        <label for="voterName">Full Name *</label>
+                        <input type="text" id="voterName" placeholder="Enter your full name" required />
+                    </div>
+
+                    <div id="optionalFields"></div>
+
+                    <button type="button" class="btn btn-primary" id="submitFormBtn">Continue to Voting ➜</button>
+                </form>
+            </div>
+
+            <!-- Candidates Card -->
+            <div class="card" id="candidatesCard" style="display: none;">
+                <div class="card-title">🧑‍⚖️ Select Your Candidate</div>
+
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Click on a candidate card to select them, then review and submit your vote</p>
+
+                <div class="candidates-grid" id="candidatesGrid"></div>
+
+                <div style="margin-top: 20px; display: flex; gap: 12px; justify-content: center;">
+                    <button class="btn btn-secondary" id="goBackBtn">← Back</button>
+                    <button class="btn btn-primary" id="submitVoteBtn" disabled>Vote ✓</button>
+                </div>
+            </div>
+
+            <!-- Live Results Card -->
+            <div class="card" id="liveResultsCard" style="display: none;">
+                <div class="card-title">📊 Live Vote Counts</div>
+
+                <div class="results-section" id="resultsContainer"></div>
+
+                <div class="info-box">
+                    <p><strong>Note:</strong> Results update in real-time as votes are cast.</p>
+                </div>
+            </div>
+
+            <!-- Info Section -->
+            <div class="card">
+                <div class="card-title">ℹ️ Important Information</div>
+
+                <ul style="margin-left: 16px; font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                    <li>Only one vote per device is allowed. Duplicate votes will be flagged.</li>
+                    <li>If CNIC is required, only one vote per CNIC will be counted.</li>
+                    <li>Your vote is secure and confidential.</li>
+                    <li>Once submitted, your vote cannot be changed.</li>
+                    <li>Multiple vote attempts may result in review by election administrators.</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <div class="modal-header">Confirm Your Vote</div>
+            <div class="modal-body">
+                <p>Are you sure you want to vote for:</p>
+                <p style="font-size: 18px; font-weight: 800; margin-top: 12px;"><span id="confirmName">—</span></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelVoteBtn">Cancel</button>
+                <button class="btn btn-primary" id="confirmVoteBtn">Yes, Submit Vote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiple Vote Warning Modal -->
+    <div class="modal" id="multipleVoteModal">
+        <div class="modal-content">
+            <div class="modal-header">⚠️ Multiple Vote Warning</div>
+            <div class="modal-body">
+                <p>Multiple votes are not allowed per device.</p>
+                <p style="margin-top: 12px; font-size: 12px;">If you proceed, your vote will be submitted but flagged for review.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelMultipleBtn">Cancel</button>
+                <button class="btn btn-danger" id="proceedMultipleBtn">Proceed Anyway</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header" style="color: var(--success);">✓ Vote Submitted</div>
+            <div class="modal-body">
+                <p>Your vote has been successfully submitted and recorded.</p>
+                <p style="margin-top: 12px; font-size: 12px;">Thank you for participating in this election!</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="okSuccessBtn">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Winner Modal -->
+    <div class="modal" id="winnerModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header" style="color: var(--primary-color); text-align: center;">🏆 Election Winner</div>
+            <div class="modal-body" style="text-align: center;">
+                <div id="winnerContent">
+                    <!-- Winner content will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="closeWinnerBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== LIVE VOTING SYSTEM - MULTI-DEVICE SYNC VIA LOCALSTORAGE =====
+        // Works offline and syncs across devices in real-time
+        // No backend required - 100% client-side
+        
+        // ===== STATE MANAGEMENT =====
+        const LS = window.localStorage;
+        const $ = (sel) => document.querySelector(sel);
+        const $$ = (sel) => document.querySelectorAll(sel);
+
+        const makeId = () => Math.random().toString(36).slice(2, 11);
+        const DEVICE_KEY = 'vl_deviceId';
+
+        if (!LS.getItem(DEVICE_KEY)) {
+            LS.setItem(DEVICE_KEY, 'voter_' + makeId());
+        }
+
+        const deviceId = LS.getItem(DEVICE_KEY);
+
+        // Read/Write helpers
+        function read(key) {
+            try {
+                return JSON.parse(LS.getItem(key) || 'null');
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function write(key, val) {
+            LS.setItem(key, JSON.stringify(val));
+        }
+
+        // State tracking
+        let currentState = 'info'; // 'info', 'form', 'candidates', 'results'
+        let selectedCandidateId = null;
+        let voterData = null;
+        let hasAlreadyVoted = false;
+
+        // ===== INITIALIZATION =====
+        function init() {
+            updateElectionStatus();
+            renderCandidates();
+            loadVoterData();
+            startTimerLoop();
+            setupEventListeners();
+            setInterval(updateElectionStatus, 2000);
+            setInterval(renderCandidates, 2000);
+        }
+
+        // ===== UI UPDATE FUNCTIONS =====
+        function updateElectionStatus() {
+            const election = read('vl_election') || { status: 'not_started', title: '' };
+            const cfg = read('vl_config') || { fields: [], liveResultsVisible: false };
+
+            $('#electionTitle').textContent = election.title || '—';
+            $('#electionStatus').textContent = election.status ? election.status.charAt(0).toUpperCase() + election.status.slice(1) : 'Not Started';
+
+            if (election.durationMin) {
+                $('#electionPeriod').textContent = `${election.durationMin} minutes`;
+            } else {
+                $('#electionPeriod').textContent = '—';
+            }
+
+            // Show/hide join section
+            const joinSection = $('#joinSection');
+            if (election.status === 'running') {
+                joinSection.style.display = 'block';
+            } else {
+                joinSection.style.display = 'none';
+                currentState = 'info';
+                hideAllCards();
+                $('#liveResultsCard').style.display = 'block';
+            }
+
+            // Show live results if enabled
+            if (cfg.liveResultsVisible) {
+                $('#liveResultsStatus').style.display = 'block';
+                $('#liveResultsCard').style.display = 'block';
+                renderLiveResults();
+            } else {
+                $('#liveResultsStatus').style.display = 'none';
+                if (currentState === 'info') {
+                    $('#liveResultsCard').style.display = 'none';
+                }
+            }
+
+            // Show winner button if election ended and winner announced
+            const winnerBtn = $('#seeWinnerBtn');
+            if (election.status === 'closed' && election.winner && election.announced) {
+                winnerBtn.style.display = 'block';
+            } else {
+                winnerBtn.style.display = 'none';
+            }
+        }
+
+        function hideAllCards() {
+            $('#voterFormCard').style.display = 'none';
+            $('#candidatesCard').style.display = 'none';
+            $('#liveResultsCard').style.display = 'none';
+        }
+
+        function startTimerLoop() {
+            setInterval(() => {
+                const election = read('vl_election') || {};
+                const timer = $('#countdownTimer');
+
+                if (election.status === 'running' && election.endsAt) {
+                    const remaining = new Date(election.endsAt).getTime() - Date.now();
+                    if (remaining <= 0) {
+                        timer.textContent = '00:00';
+                    } else {
+                        const mins = Math.floor(remaining / 60000);
+                        const secs = Math.floor((remaining % 60000) / 1000);
+                        timer.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                    }
+                } else {
+                    timer.textContent = '—:—';
+                }
+            }, 1000);
+        }
+
+        function renderCandidates() {
+            const candidates = read('vl_candidates') || [];
+            const voters = read('vl_voters') || [];
+            const grid = $('#candidatesGrid');
+
+            grid.innerHTML = '';
+
+            if (candidates.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-secondary);">No candidates available</p>';
+                return;
+            }
+
+            const tally = {};
+            candidates.forEach((c) => (tally[c.id] = 0));
+            voters.forEach((v) => {
+                if (v.votedCandidateId) tally[v.votedCandidateId]++;
+            });
+
+            candidates.forEach((c) => {
+                const div = document.createElement('div');
+                div.className = 'candidate-card';
+                if (c.id === selectedCandidateId) div.classList.add('selected');
+
+                const voteCount = tally[c.id] || 0;
+                const totalVotes = voters.filter((v) => v.votedCandidateId).length || 1;
+                const percent = Math.round((voteCount / totalVotes) * 100);
+
+                const imageHtml = c.picture ? 
+                    `<img src="${c.picture}" alt="${escapeHtml(c.name)}" />` : 
+                    `<div class="candidate-image-emoji">${c.emoji || '🔷'}</div>`;
+
+                div.innerHTML = `
+                    <div class="candidate-image">${imageHtml}</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="candidate-emoji">${c.emoji || '🔷'}</div>
+                        <div>
+                            <div class="candidate-name">${escapeHtml(c.name)}</div>
+                            <div class="candidate-party">${escapeHtml(c.party)}</div>
+                        </div>
+                    </div>
+                    <div class="candidate-stats">
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: ${Math.max(2, percent)}%"></div>
+                        </div>
+                        <div class="vote-count">${voteCount} votes (${percent}%)</div>
+                    </div>
+                `;
+
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.candidate-card').forEach((c) => c.classList.remove('selected'));
+                    div.classList.add('selected');
+                    selectedCandidateId = c.id;
+                    $('#submitVoteBtn').disabled = false;
+                });
+
+                grid.appendChild(div);
+            });
+        }
+
+        function renderLiveResults() {
+            const candidates = read('vl_candidates') || [];
+            const voters = read('vl_voters') || [];
+            const container = $('#resultsContainer');
+
+            container.innerHTML = '';
+
+            if (candidates.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary);">No results yet</p>';
+                return;
+            }
+
+            const tally = {};
+            candidates.forEach((c) => (tally[c.id] = 0));
+            voters.forEach((v) => {
+                if (v.votedCandidateId) tally[v.votedCandidateId]++;
+            });
+
+            const totalVotes = voters.filter((v) => v.votedCandidateId).length || 1;
+
+            candidates.forEach((c) => {
+                const voteCount = tally[c.id] || 0;
+                const percent = Math.round((voteCount / totalVotes) * 100);
+
+                const div = document.createElement('div');
+                div.className = 'results-bar';
+                div.innerHTML = `
+                    <div class="results-label">${c.emoji} ${escapeHtml(c.name)}</div>
+                    <div class="results-bar-fill">
+                        <div class="results-bar-progress" style="width: ${Math.max(2, percent)}%"></div>
+                    </div>
+                    <div class="results-value">${voteCount} (${percent}%)</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ===== EVENT LISTENERS =====
+        function setupEventListeners() {
+            // Join button
+            $('#joinBtn').addEventListener('click', () => {
+                const election = read('vl_election') || {};
+                if (election.status !== 'running') {
+                    alert('⚠️ Election is not running');
+                    return;
+                }
+                showVoterForm();
+            });
+
+            // Submit form button
+            $('#submitFormBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const name = $('#voterName').value.trim();
+                if (!name) {
+                    alert('⚠️ Please enter your name');
+                    return;
+                }
+
+                voterData = { name, deviceId };
+                const cfg = read('vl_config') || { fields: [] };
+
+                cfg.fields.forEach((field) => {
+                    const input = document.getElementById('field_' + field);
+                    if (input) {
+                        if (input.type === 'file') {
+                            voterData[field] = input.files.length > 0 ? 'uploaded' : null;
+                        } else {
+                            voterData[field] = input.value && input.value.trim() ? input.value.trim() : null;
+                        }
+                    }
+                });
+
+                showCandidates();
+            });
+
+            // Go back button
+            $('#goBackBtn').addEventListener('click', () => {
+                selectedCandidateId = null;
+                showVoterForm();
+            });
+
+            // Submit vote button
+            $('#submitVoteBtn').addEventListener('click', () => {
+                if (!selectedCandidateId) {
+                    alert('⚠️ Please select a candidate');
+                    return;
+                }
+
+                const candidates = read('vl_candidates') || [];
+                const candidate = candidates.find((c) => c.id === selectedCandidateId);
+                if (!candidate) {
+                    alert('⚠️ Candidate not found');
+                    return;
+                }
+
+                // Check for multiple votes
+                const voters = read('vl_voters') || [];
+                const cfg = read('vl_config') || { fields: [] };
+
+                const alreadyVotedByDevice = voters.some((v) => v.deviceId === deviceId);
+                const alreadyVotedByCnic = cfg.fields.includes('cnic') && voterData.cnic ? voters.some((v) => v.cnic === voterData.cnic) : false;
+
+                $('#confirmName').textContent = `${candidate.emoji} ${candidate.name}`;
+
+                if (alreadyVotedByDevice || alreadyVotedByCnic) {
+                    // Show multiple vote warning
+                    hasAlreadyVoted = true;
+                    $('#multipleVoteModal').classList.add('active');
+                } else {
+                    // Show confirmation
+                    hasAlreadyVoted = false;
+                    $('#confirmationModal').classList.add('active');
+                }
+            });
+
+            // Confirmation modal
+            $('#cancelVoteBtn').addEventListener('click', () => {
+                $('#confirmationModal').classList.remove('active');
+            });
+
+            $('#confirmVoteBtn').addEventListener('click', () => {
+                $('#confirmationModal').classList.remove('active');
+                submitVote(false);
+            });
+
+            // Multiple vote modal
+            $('#cancelMultipleBtn').addEventListener('click', () => {
+                $('#multipleVoteModal').classList.remove('active');
+            });
+
+            $('#proceedMultipleBtn').addEventListener('click', () => {
+                $('#multipleVoteModal').classList.remove('active');
+                submitVote(true);
+            });
+
+            // Success modal
+            $('#okSuccessBtn').addEventListener('click', () => {
+                $('#successModal').classList.remove('active');
+                reset();
+            });
+
+            // Winner modal
+            $('#closeWinnerBtn').addEventListener('click', () => {
+                $('#winnerModal').classList.remove('active');
+            });
+
+            // See Winner button
+            $('#seeWinnerBtn').addEventListener('click', () => {
+                showWinnerModal();
+            });
+        }
+
+        // ===== VOTING FLOW =====
+        function showVoterForm() {
+            currentState = 'form';
+            hideAllCards();
+            $('#voterFormCard').style.display = 'block';
+
+            // Build optional fields
+            const cfg = read('vl_config') || { fields: [] };
+            const optionalFields = $('#optionalFields');
+            optionalFields.innerHTML = '';
+
+            cfg.fields.forEach((field) => {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+
+                const fieldNames = {
+                    cnic: 'CNIC Number',
+                    father_name: "Father's Name",
+                    picture: 'Picture Upload',
+                    left_finger: 'Left Finger Print',
+                    right_finger: 'Right Finger Print',
+                    email: 'Email Address',
+                    contact_number: 'Contact Number'
+                };
+
+                const label = document.createElement('label');
+                label.htmlFor = 'field_' + field;
+                label.textContent = (fieldNames[field] || field) + ' *';
+
+                let input;
+                if (field === 'picture' || field === 'left_finger' || field === 'right_finger') {
+                    input = document.createElement('input');
+                    input.type = 'file';
+                    input.id = 'field_' + field;
+                    input.accept = 'image/*';
+                } else if (field === 'email') {
+                    input = document.createElement('input');
+                    input.type = 'email';
+                    input.id = 'field_' + field;
+                    input.placeholder = 'your.email@example.com';
+                } else if (field === 'contact_number') {
+                    input = document.createElement('input');
+                    input.type = 'tel';
+                    input.id = 'field_' + field;
+                    input.placeholder = '03001234567';
+                } else {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    input.id = 'field_' + field;
+                    input.placeholder = fieldNames[field] || field;
+                }
+
+                div.appendChild(label);
+                div.appendChild(input);
+                optionalFields.appendChild(div);
+            });
+
+            document.getElementById('voterName').focus();
+        }
+
+        function showCandidates() {
+            currentState = 'candidates';
+            hideAllCards();
+            $('#candidatesCard').style.display = 'block';
+            selectedCandidateId = null;
+            $('#submitVoteBtn').disabled = true;
+            renderCandidates();
+        }
+
+        function submitVote(flaggedForReview) {
+            if (!selectedCandidateId || !voterData) {
+                alert('⚠️ Error: Missing vote data');
+                return;
+            }
+
+            const timestamp = Date.now();
+            const voterRecord = {
+                ...voterData,
+                votedCandidateId: selectedCandidateId,
+                timestamp,
+                flaggedForReview: flaggedForReview ? true : undefined
+            };
+
+            const voters = read('vl_voters') || [];
+            voters.push(voterRecord);
+            write('vl_voters', voters);
+
+            // Show success
+            $('#successModal').classList.add('active');
+        }
+
+        function loadVoterData() {
+            const voters = read('vl_voters') || [];
+            hasAlreadyVoted = voters.some((v) => v.deviceId === deviceId);
+        }
+
+        function reset() {
+            currentState = 'info';
+            selectedCandidateId = null;
+            voterData = null;
+            $('#voterName').value = '';
+            $('#optionalFields').innerHTML = '';
+            hideAllCards();
+            updateElectionStatus();
+        }
+
+        // ===== HELPER FUNCTIONS =====
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showWinnerModal() {
+            const election = read('vl_election') || {};
+            const winnerContent = $('#winnerContent');
+
+            if (election.winner) {
+                const winner = election.winner;
+                const imageHtml = winner.picture ?
+                    `<img src="${winner.picture}" alt="${escapeHtml(winner.name)}" style="width: 120px; height: 120px; border-radius: 12px; object-fit: cover; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />` :
+                    `<div style="width: 120px; height: 120px; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);">${winner.emoji || '👤'}</div>`;
+
+                winnerContent.innerHTML = `
+                    ${imageHtml}
+                    <h2 style="font-size: 28px; font-weight: 900; color: var(--primary-color); margin: 0; margin-bottom: 8px;">${escapeHtml(winner.name)}</h2>
+                    <p style="font-size: 16px; color: var(--text-secondary); margin: 0; margin-bottom: 16px;">${escapeHtml(winner.party || 'Independent')}</p>
+                    <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 12px; display: inline-block;">
+                        <p style="font-size: 14px; color: var(--success); font-weight: 700; margin: 0;">🏆 Winner</p>
+                    </div>
+                `;
+            } else {
+                winnerContent.innerHTML = `
+                    <div style="padding: 20px;">
+                        <p style="font-size: 16px; color: var(--text-secondary); margin: 0;">No winner has been announced yet.</p>
+                    </div>
+                `;
+            }
+
+            $('#winnerModal').classList.add('active');
+        }
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+
+    <!-- Socket.io client + realtime helper -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/realtime-client.js"></script>
+    <!-- Voter Real-time Integration (socket based) -->
+    <script src="voter-realtime.js"></script>
+</body>
+</html>
